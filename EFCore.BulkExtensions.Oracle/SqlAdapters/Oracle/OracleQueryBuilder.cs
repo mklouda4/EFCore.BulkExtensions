@@ -3,7 +3,6 @@ using System.Data;
 using System.Data.Common;
 using System.Security.Cryptography;
 using System.Text;
-using static System.Runtime.InteropServices.Marshalling.IIUnknownCacheStrategy;
 
 namespace EFCore.BulkExtensions.SqlAdapters.Oracle;
 
@@ -23,7 +22,7 @@ public class OracleQueryBuilder : SqlQueryBuilder
     public static string CreateTableCopy(string existingTableName, string newTableName, TableInfo tableInfo, bool useTempDb, OperationType operationType)
     {
         var selectColummns = "*";
-        if(operationType == OperationType.Delete)
+        if (operationType == OperationType.Delete)
         {
             var firstPrimaryKey = tableInfo.EntityPKPropertyColumnNameDict?.FirstOrDefault().Value ?? tableInfo.IdentityColumnName;
             selectColummns = firstPrimaryKey ?? "*";
@@ -96,7 +95,7 @@ END;";
     /// <param name="tableInfo"></param>
     /// <param name="operationType"></param>
     /// <exception cref="NotImplementedException"></exception>
-    public static (string,string) MergeTable<T>(TableInfo tableInfo, OperationType operationType) where T : class
+    public static (string, string) MergeTable<T>(TableInfo tableInfo, OperationType operationType) where T : class
     {
         if (operationType == OperationType.InsertOrUpdateOrDelete)
         {
@@ -114,19 +113,19 @@ END;";
         if (operationType == OperationType.Delete)
         {
             q = $"DELETE FROM {tableInfo.FullTableName} A " +
-                $"WHERE A.{firstPrimaryKey} IN (SELECT B.{firstPrimaryKey} FROM {tableInfo.FullTempTableName} B); ";
+                $"WHERE A.{firstPrimaryKey} IN (SELECT B.{firstPrimaryKey} FROM {tableInfo.FullTempTableName} B)";
         }
         else if (operationType == OperationType.Insert)
         {
             var commaSeparatedColumns = SqlQueryBuilder.GetCommaSeparatedColumns(columnsList).Replace("[", "").Replace("]", "");
             q = $"INSERT INTO {tableInfo.FullTableName} ({commaSeparatedColumns}) " +
-                $"SELECT {commaSeparatedColumns} FROM {tableInfo.FullTempTableName}; ";
+                $"SELECT {commaSeparatedColumns} FROM {tableInfo.FullTempTableName}";
         }
         else if (operationType == OperationType.Update || operationType == OperationType.InsertOrUpdate)
         {
             var commaSeparatedColumns = SqlQueryBuilder.GetCommaSeparatedColumns(columnsList, "B").Replace("[", "").Replace("]", "");
             var commaSeparatedColumnsEq = SqlQueryBuilder.GetCommaSeparatedColumns(columnsListWithouPrimaryKey, "A", "B").Replace("[", "").Replace("]", "");
-            
+
             q = $@"MERGE INTO {tableInfo.FullTableName} A
 USING {tableInfo.FullTempTableName} B
 ON (A.{firstPrimaryKey} = B.{firstPrimaryKey})
@@ -138,11 +137,7 @@ WHEN MATCHED THEN
                 q += $@"
 WHEN NOT MATCHED THEN
     INSERT ({commaSeparatedColumns.Replace("B.", "")})
-    VALUES ({commaSeparatedColumns});";
-            }
-            else
-            {
-                q += ";";
+    VALUES ({commaSeparatedColumns})";
             }
 
             if (tableInfo.CreateOutputTable)
@@ -252,12 +247,12 @@ END;";
     {
         var tableName = tableInfo.TableName;
         var schemaFormated = tableInfo.Schema == null ? "" : $@"{tableInfo.Schema}.";
-        var fullTableNameFormated = $@"{schemaFormated}{tableName}";
+        _ = $@"{schemaFormated}{tableName}";
 
         var uniqueConstrainName = GetUniqueConstrainName(tableInfo);
 
-        var q = $@"DROP INDEX {uniqueConstrainName};";
-        
+        var q = $@"DROP INDEX {uniqueConstrainName}";
+
         q = q.Replace("[", "").Replace("]", "");
 
         return q;
@@ -274,7 +269,7 @@ END;";
         var uniqueConstrainName = GetUniqueConstrainName(tableInfo);
 
         var q = $@"SELECT DISTINCT CONSTRAINT_NAME FROM USER_CONSTRAINTS WHERE " +
-                $@"CONSTRAINT_TYPE IN ('U', 'P') AND CONSTRAINT_NAME = '{uniqueConstrainName}';";
+                $@"CONSTRAINT_TYPE IN ('U', 'P') AND CONSTRAINT_NAME = '{uniqueConstrainName}'";
 
         q = q.Replace("[", "").Replace("]", "");
 
@@ -340,7 +335,7 @@ END;";
     /// <returns></returns>
     public override string TruncateTable(string tableName)
     {
-        var q = $"TRUNCATE TABLE {tableName};";
+        var q = $"TRUNCATE TABLE {tableName}";
         q = q.Replace("[", "").Replace("]", "");
         return q;
     }
