@@ -158,7 +158,8 @@ public class OracleAdapter : ISqlOperationsAdapter
             }
 
             var sqlMergeTable = OracleQueryBuilder.MergeTable<T>(tableInfo, operationType);
-            await ExecuteSqlRawAsync(context, isAsync, sqlMergeTable, cancellationToken).ConfigureAwait(false);
+            await ExecuteSqlRawAsync(context, isAsync, sqlMergeTable.Item1, cancellationToken).ConfigureAwait(false);
+            await ExecuteSqlRawAsync(context, isAsync, sqlMergeTable.Item2, cancellationToken).ConfigureAwait(false);
             if (tableInfo.CreateOutputTable)
             {
                 if (isAsync)
@@ -251,6 +252,9 @@ public class OracleAdapter : ISqlOperationsAdapter
 
     private async Task ExecuteSqlRawAsync(DbContext context, bool isAsync, string commandText, CancellationToken cancellationToken)
     {
+        if (string.IsNullOrEmpty(commandText) || string.IsNullOrWhiteSpace(commandText) || commandText.Length <= 1)
+            return;
+
         commandText = commandText.Replace("[", "").Replace("]", "");
         if (isAsync)
         {
