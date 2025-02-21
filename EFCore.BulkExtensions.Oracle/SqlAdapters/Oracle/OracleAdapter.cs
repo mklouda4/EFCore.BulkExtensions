@@ -256,13 +256,22 @@ public class OracleAdapter : ISqlOperationsAdapter
             return;
 
         commandText = commandText.Replace("[", "").Replace("]", "");
+        
+        var conn = context.Database.GetDbConnection();
+        using var cmd = conn.CreateCommand();
+
+        cmd.CommandText = commandText;
+        cmd.Transaction ??= context?.Database?.CurrentTransaction?.GetDbTransaction();
+
         if (isAsync)
         {
-            await context.Database.ExecuteSqlRawAsync(commandText, cancellationToken).ConfigureAwait(false);
+            await cmd.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+            //await context.Database.ExecuteSqlRawAsync(commandText, cancellationToken).ConfigureAwait(false);
         }
         else
         {
-            context.Database.ExecuteSqlRaw(commandText);
+            cmd.ExecuteNonQuery();
+            //context.Database.ExecuteSqlRaw(commandText);
         }
     }
     #endregion
