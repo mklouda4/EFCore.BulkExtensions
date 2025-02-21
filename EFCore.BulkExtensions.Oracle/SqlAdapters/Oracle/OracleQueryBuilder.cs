@@ -96,14 +96,15 @@ END;";
     /// <param name="tableInfo"></param>
     /// <param name="operationType"></param>
     /// <exception cref="NotImplementedException"></exception>
-    public static string MergeTable<T>(TableInfo tableInfo, OperationType operationType) where T : class
+    public static (string,string) MergeTable<T>(TableInfo tableInfo, OperationType operationType) where T : class
     {
         if (operationType == OperationType.InsertOrUpdateOrDelete)
         {
             throw new NotImplementedException("OperationType.InsertOrUpdateOrDelete is not supported for Oracle");
         }
-        
+
         string q = "";
+        string qOut = "";
         var firstPrimaryKey = tableInfo.EntityPKPropertyColumnNameDict?.FirstOrDefault().Value ?? tableInfo.IdentityColumnName;
 
 
@@ -146,26 +147,27 @@ WHEN NOT MATCHED THEN
 
             if (tableInfo.CreateOutputTable)
             {
-                q += @$"DECLARE
+                var ins = $@"SELECT MAX(id) INTO v_last_insert_id FROM {tableInfo.FullTableName};
+
+    INSERT INTO {tableInfo.FullTempOutputTableName} 
+    SELECT * FROM {tableInfo.FullTableName} 
+    WHERE {firstPrimaryKey} >= v_last_insert_id;";
+
+                var upd = $@"INSERT INTO {tableInfo.FullTempOutputTableName} 
+    SELECT * FROM {tableInfo.FullTempTableName};";
+
+                var cmd = (operationType == OperationType.Insert || operationType == OperationType.InsertOrUpdate) ? ins : upd;
+
+                qOut += @$"DECLARE
     v_last_insert_id NUMBER;
 BEGIN
-    IF {tableInfo.CreateOutputTable} THEN
-        IF {operationType} IN ('Insert', 'InsertOrUpdate') THEN
-            SELECT MAX(id) INTO v_last_insert_id FROM {tableInfo.FullTableName};
-
-            INSERT INTO {tableInfo.FullTempOutputTableName} 
-            SELECT * FROM {tableInfo.FullTableName} 
-            WHERE {firstPrimaryKey} >= v_last_insert_id;
-        ELSIF {operationType} = 'Update' THEN
-            INSERT INTO {tableInfo.FullTempOutputTableName} 
-            SELECT * FROM {tableInfo.FullTempTableName};
-        END IF;
-    END IF;
+    {cmd}
 END;";
             }
         }
 
         q = q.Replace("[", "").Replace("]", "");
+        qOut = qOut.Replace("[", "").Replace("]", "");
 
         Dictionary<string, string>? sourceDestinationMappings = tableInfo.BulkConfig.CustomSourceDestinationMappingColumns;
         if (tableInfo.BulkConfig.CustomSourceTableName != null && sourceDestinationMappings != null && sourceDestinationMappings.Count > 0)
@@ -199,7 +201,7 @@ END;";
                 q = q.Replace(qSegment, qSegmentUpdated);
             }
         }
-        return q;
+        return (q, qOut);
     }
     /// <summary>
     /// Generates SQL query to select output from a table

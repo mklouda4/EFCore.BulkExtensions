@@ -42,7 +42,7 @@ public class SqlQueryBuilderUnitOracleTests
     {
         TableInfo tableInfo = GetTestTableInfo();
         tableInfo.IdentityColumnName = "ItemId";
-        string result = OracleQueryBuilder.MergeTable<Item>(tableInfo, OperationType.Insert);
+        string result = OracleQueryBuilder.MergeTable<Item>(tableInfo, OperationType.Insert).Item1;
 
         string expected = "INSERT INTO dbo.Item (Name) SELECT Name FROM dbo.ItemTemp1234; ";
 
@@ -53,7 +53,7 @@ public class SqlQueryBuilderUnitOracleTests
     {
         TableInfo tableInfo = GetTestTableInfo();
         tableInfo.IdentityColumnName = "ItemId";
-        string result = OracleQueryBuilder.MergeTable<Item>(tableInfo, OperationType.Update);
+        string result = OracleQueryBuilder.MergeTable<Item>(tableInfo, OperationType.Update).Item1;
 
         string expected = @"MERGE INTO dbo.Item AS A
 USING dbo.ItemTemp1234 AS B
@@ -68,7 +68,7 @@ WHEN MATCHED THEN
     {
         TableInfo tableInfo = GetTestTableInfo();
         tableInfo.IdentityColumnName = "ItemId";
-        string result = OracleQueryBuilder.MergeTable<Item>(tableInfo, OperationType.Delete);
+        string result = OracleQueryBuilder.MergeTable<Item>(tableInfo, OperationType.Delete).Item1;
 
         string expected = "DELETE FROM FROM dbo.Item A WHERE A.ItemId IN (SELECT B.ItemId FROM dbo.ItemTemp1234 B); ";
 
@@ -80,7 +80,7 @@ WHEN MATCHED THEN
     {
         TableInfo tableInfo = GetTestTableInfo();
         tableInfo.IdentityColumnName = "ItemId";
-        string result = OracleQueryBuilder.MergeTable<Item>(tableInfo, OperationType.InsertOrUpdate);
+        string result = OracleQueryBuilder.MergeTable<Item>(tableInfo, OperationType.InsertOrUpdate).Item1;
 
         string expected = @"MERGE INTO dbo.Item AS A
 USING dbo.ItemTemp1234 AS B
