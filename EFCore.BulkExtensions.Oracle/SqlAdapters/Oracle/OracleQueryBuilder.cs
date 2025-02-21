@@ -195,7 +195,7 @@ END;";
                 }
             }
 
-            // Pokud se segment změnil, aktualizujte celý dotaz
+            // If the segment has changed, update the entire query
             if (qSegment != qSegmentUpdated)
             {
                 q = q.Replace(qSegment, qSegmentUpdated);

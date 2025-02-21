@@ -1,0 +1,45 @@
+services:
+  postgres:
+    image: "postgis/postgis"
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=Postgres22
+      - POSTGRES_DB=bulk
+    volumes:
+      - postgis_data:/var/lib/postgresql/data
+
+  mysql:
+    image: mysql
+    environment:
+      - MYSQL_DATABASE=bulk
+      - MYSQL_ROOT_PASSWORD=MySQL22
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql_data
+    command: --local-infile=1
+
+  oracle:
+    image: gvenzl/oracle-xe
+    environment:
+      - ORACLE_PASSWORD=Oracle
+    ports:
+      - "1521:1521"
+    volumes:
+      - oracle_data:/opt/oracle/oradata
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-CU14-ubuntu-22.04
+    environment:
+      - SA_PASSWORD=SuperSecret42!
+      - ACCEPT_EULA=Y
+    ports:
+      - "1433:1433"
+
+volumes:
+  postgis_data:
+  mysql_data:
+  oracle_data:
+  sql_server:

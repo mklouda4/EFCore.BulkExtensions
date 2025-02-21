@@ -409,6 +409,14 @@ public class MySqlAdapter : ISqlOperationsAdapter
 
         mySqlBulkCopy.NotifyAfter = tableInfo.BulkConfig.NotifyAfter ?? tableInfo.BulkConfig.BatchSize;
         mySqlBulkCopy.BulkCopyTimeout = tableInfo.BulkConfig.BulkCopyTimeout ?? mySqlBulkCopy.BulkCopyTimeout;
+
+        mySqlBulkCopy.ConflictOption = tableInfo.BulkConfig.ConflictOption switch
+        {
+            ConflictOption.None => MySqlBulkLoaderConflictOption.None,
+            ConflictOption.Replace => MySqlBulkLoaderConflictOption.Replace,
+            ConflictOption.Ignore => MySqlBulkLoaderConflictOption.Ignore,
+            _ => throw new InvalidEnumArgumentException(nameof(tableInfo.BulkConfig.ConflictOption))
+        };
     }
 
     #endregion
@@ -451,7 +459,7 @@ public class MySqlAdapter : ISqlOperationsAdapter
         var columnsDict = new Dictionary<string, object?>();
         var ownedEntitiesMappedProperties = new HashSet<string>();
 
-        var databaseType = SqlAdaptersMapping.GetDatabaseType();
+        var databaseType = SqlAdaptersMapping.GetDatabaseType(context);
         var isMySql = databaseType == SqlType.MySql;
         
         var objectIdentifier = tableInfo.ObjectIdentifier;

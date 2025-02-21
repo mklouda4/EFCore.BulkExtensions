@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>    
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -23,8 +23,7 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="3.0.2" PrivateAssets="All" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\EFCore.BulkExtensions\EFCore.BulkExtensions.csproj" />
-	<ProjectReference Include="..\EFCore.BulkExtensions.MySql\EFCore.BulkExtensions.MySql.csproj" />
+    <ProjectReference Include="..\EFCore.BulkExtensions\EFCore.BulkExtensions.Net8.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="testsettings.local.json">

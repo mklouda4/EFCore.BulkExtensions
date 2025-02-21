@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using EFCore.BulkExtensions.SqlAdapters;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 
@@ -8,10 +9,13 @@ namespace EFCore.BulkExtensions.Tests.Owned;
 
 public class InheritedOwnedTests
 {
-    [Fact]
-    public async Task InheritedOwnedTest()
+    [Theory]
+    [InlineData(SqlType.SqlServer)]
+    public async Task InheritedOwnedTest(SqlType sqlType)
     {
-        using var context = new InheritedDbContext(ContextUtil.GetOptions<InheritedDbContext>(databaseName: $"{nameof(EFCoreBulkTest)}_NestedOwned"));
+        var options = new ContextUtil(sqlType)
+            .GetOptions<InheritedDbContext>(databaseName: $"{nameof(EFCoreBulkTest)}_NestedOwned");
+        using var context = new InheritedDbContext(options);
 
         await context.Database.EnsureDeletedAsync();
         await context.Database.EnsureCreatedAsync();
@@ -108,7 +112,7 @@ public record Overdraft
     public decimal Limit { get; init; }
 }
 
-public class InheritedDbContext(DbContextOptions opts) : DbContext(opts)
+public class InheritedDbContext(DbContextOptions opts) : TestContextBase(opts)
 {
     public DbSet<AbstractAccount> Accounts => Set<AbstractAccount>();
     public DbSet<SavingsAccount> SavingsAccounts => Set<SavingsAccount>();

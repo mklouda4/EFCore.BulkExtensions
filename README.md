@@ -6,9 +6,9 @@ EntityFrameworkCore extensions (performance improvement - into overdrive):
 Library is Lightweight and very Efficient (warp speed), having all mostly used [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) operation.  
 Was selected in top 20 [EF Core Extensions](https://docs.microsoft.com/en-us/ef/core/extensions/) recommended by Microsoft.  
 Latest version is using EF Core 9.  
-Supports all 4 major sql databases: **SQLServer, PostgreSQL, MySQL, SQLite.**  
+Supports all 5 major sql databases: **SQLServer, PostgreSQL, MySQL, Oracle, SQLite**  
 Check out [Testimonials](https://docs.google.com/spreadsheets/d/e/2PACX-1vShdv2sTm3oQfowm9kVIx-PLBCk1lGQEa9E6n92-dX3pni7-XQUEp6taVcMSZVi9BaSAizv1YanWTy3/pubhtml?gid=801420190&single=true) from the Community and User Comments.  
-With thousands of satisfied users and many happy customers from around the globe.  
+With thousands of pleased users and many satisfied clients from around the globe.  
 Icon>> and Logo (__):  
 <img src="/EFCore.BulkExtensions/EFCoreBulk.png" height=60> & <img src="EFCoreBulkLogo_small.png" height=60>  
 (f.forward | rocket time)
@@ -34,7 +34,7 @@ If eligible for free usage but still need  active support, consider purchasing S
 If you find this project useful you can mark it by leaving a Github **Star** :star:  
 And even with Community license, if you want help Development, you can make a Donation:  
 [<img src="https://www.buymeacoffee.com/assets/img/custom_images/yellow_img.png" alt="Buy Me A Coffee" height=28>](https://www.buymeacoffee.com/boris.dj) _ or _ 
-[![Button](https://img.shields.io/badge/donate-Bitcoin-orange.svg?logo=bitcoin):zap:](https://borisdj.net/donation/donate-btc.html)
+[![Button](https://img.shields.io/badge/donate-Bitcoin-orange.svg?logo=bitcoin):zap:](https://borisdj.net/donation/donate-btc.html) ([Moneylution](https://infopedia.io/revolution-of-money/))
 
 ## Contributing
 Please read [CONTRIBUTING](https://github.com/borisdj/EFCore.BulkExtensions/blob/master/CONTRIBUTING.md) for details on code of conduct, and the process for submitting pull requests. <!-- valid link short also (CONTRIBUTING.md) -->   
@@ -46,6 +46,7 @@ Supported databases:
 -**SQLServer** (or AzureSQL) under the hood uses [SqlBulkCopy](https://msdn.microsoft.com/en-us/library/system.data.sqlclient.sqlbulkcopy.aspx) for Insert, Update/Delete = BulkInsert + raw Sql [MERGE](https://docs.microsoft.com/en-us/sql/t-sql/statements/merge-transact-sql).  
 -**PostgreSQL** (9.5+) is using [COPY BINARY](https://www.postgresql.org/docs/9.2/sql-copy.html) combined with [ON CONFLICT](https://www.postgresql.org/docs/10/sql-insert.html#SQL-ON-CONFLICT) for Update.  
 -**MySQL** (8+) is using [MySqlBulkCopy](https://mysqlconnector.net/api/mysqlconnector/mysqlbulkcopytype/) combined with [ON DUPLICATE](https://dev.mysql.com/doc/refman/8.0/en/insert-on-duplicate.html) for Update.  
+-**Oracle** (8+) is using [OracleBulkCopy](https://docs.oracle.com/cd/E11882_01/win.112/e23174/OracleBulkCopyClass.htm#ODPNT7446) combined with [MERGE](https://docs.oracle.com/en/database/oracle/oracle-database/21/sqlrf/MERGE.html) for Update.  
 -**SQLite** has no Copy tool, instead library uses [plain SQL](https://learn.microsoft.com/en-us/dotnet/standard/data/sqlite/bulk-insert) combined with [UPSERT](https://www.sqlite.org/lang_UPSERT.html).  
 Bulk Tests can not have UseInMemoryDb because InMemoryProvider does not support Relational-specific methods.  
 Instead Test options are  SqlServer(Developer or Express), LocalDb(if alongside [Developer v.](https://stackoverflow.com/questions/42885377/sql-server-2016-developer-version-can-not-connect-to-localdb-mssqllocaldb?noredirect=1&lq=1)), or with  other adapters.
@@ -54,11 +55,12 @@ Instead Test options are  SqlServer(Developer or Express), LocalDb(if alongside 
 Available on [![NuGet](https://img.shields.io/nuget/v/EFCore.BulkExtensions.svg)](https://www.nuget.org/packages/EFCore.BulkExtensions/)  [![Downloads](https://img.shields.io/nuget/dt/EFCore.BulkExtensions.svg)](https://www.nuget.org/packages/EFCore.BulkExtensions/)  
 Main nuget is for all Databases, and specific ones with single provider for those who need small packages.  
 Package manager console command for installation: *Install-Package EFCore.BulkExtensions*  
-Specific ones have adapter suffix: MainNuget + *.SqlServer/PostgreSql/MySql/Sqlite* 
+Specific ones have adapter suffix: MainNuget + *.SqlServer/PostgreSql/MySql/Oracle/Sqlite* 
 (
 [![](https://img.shields.io/static/v1?label=&message=MS&color=darkred)](https://www.nuget.org/packages/EFCore.BulkExtensions.SqlServer)
 [![](https://img.shields.io/static/v1?label=&message=PG&color=blue)](https://www.nuget.org/packages/EFCore.BulkExtensions.PostgreSql)
 [![](https://img.shields.io/static/v1?label=&message=MY&color=chocolate)](https://www.nuget.org/packages/EFCore.BulkExtensions.MySql)
+[![](https://img.shields.io/static/v1?label=&message=OR&color=red)](https://www.nuget.org/packages/EFCore.BulkExtensions.Oracle)
 [![](https://img.shields.io/static/v1?label=&message=LT&color=lightgreen)](https://www.nuget.org/packages/EFCore.BulkExtensions.Sqlite)
 )  
 Its assembly is [Strong-Named](https://docs.microsoft.com/en-us/dotnet/standard/library-guidance/strong-naming) and [Signed](https://github.com/borisdj/EFCore.BulkExtensions/issues/161) with a key.
@@ -73,7 +75,8 @@ Its assembly is [Strong-Named](https://docs.microsoft.com/en-us/dotnet/standard/
 | 2.x   | NetStandard 2.0 | EF Core 2 | NetCore(2.0+) or NetFrm(4.6.1+) |
 | 1.x   | NetStandard 1.4 | EF Core 1 | NetCore(1.0+)                   |
 
-Supports follows official [.Net lifecycle](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core), currently v.9 as latest and v.8(LTS).
+Supports follows official [.Net lifecycle](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core), currently v.9 as latest and v.8(LTS).  
+**Currently *Pomelo.EntityFrameworkCore.MySql* still does not have full Release for EF9 so its nuget is published as 'rc' and Main package as 9.0.0-rc.1 (mysql adapter is ommited from from main release version 9.0.1)
 
 ## Usage
 It's pretty simple and straightforward.  
@@ -203,26 +206,27 @@ Note: Bulk ops have optional argument *Type type* that can be set to type of Ent
 ```C#
 PROPERTY : DEFAULTvalue
 ----------------------------------------------------------------------------------------------
- 1 PreserveInsertOrder: true,                   21 PropertiesToInclude: null,
- 2 SetOutputIdentity: false,                    22 PropertiesToIncludeOnCompare: null,
- 3 SetOutputNonIdentityColumns: true,           23 PropertiesToIncludeOnUpdate: null,
- 4 LoadOnlyIncludedColumns: false,              24 PropertiesToExclude: null,
- 5 BatchSize: 2000,                             25 PropertiesToExcludeOnCompare: null,
- 6 NotifyAfter: null,                           26 PropertiesToExcludeOnUpdate: null,
- 7 BulkCopyTimeout: null,                       27 UpdateByProperties: null,
- 8 TrackingEntities: false,                     28 ReplaceReadEntities: false,
- 9 UseTempDB: false,                            29 EnableShadowProperties: false,
-10 UniqueTableNameTempDb: true,                 30 CustomSqlPostProcess: null,
-11 CustomDestinationTableName: null,            31 IncludeGraph: false,
-12 CustomSourceTableName: null,                 32 OmitClauseExistsExcept: false,
-13 CustomSourceDestinationMappingColumns: null, 33 DoNotUpdateIfTimeStampChanged: false,
-14 OnConflictUpdateWhereSql: null,              34 SRID: 4326,
-15 WithHoldlock: true,                          35 DateTime2PrecisionForceRound: false,
-16 CalculateStats: false,                       36 TemporalColumns: { "PeriodStart", "PeriodEnd" },
-17 SqlBulkCopyOptions: Default,                 37 OnSaveChangesSetFK: true,
-18 SqlBulkCopyColumnOrderHints: null,           38 IgnoreGlobalQueryFilters: false,
-19 DataReader: null,                            39 EnableStreaming: false,
-20 UseOptionLoopJoin:false,                     40 ApplySubqueryLimit: 0
+ 1 PreserveInsertOrder: true,                   22 PropertiesToInclude: null,
+ 2 SetOutputIdentity: false,                    23 PropertiesToIncludeOnCompare: null,
+ 3 SetOutputNonIdentityColumns: true,           24 PropertiesToIncludeOnUpdate: null,
+ 4 LoadOnlyIncludedColumns: false,              25 PropertiesToExclude: null,
+ 5 BatchSize: 2000,                             26 PropertiesToExcludeOnCompare: null,
+ 6 NotifyAfter: null,                           27 PropertiesToExcludeOnUpdate: null,
+ 7 BulkCopyTimeout: null,                       28 UpdateByProperties: null,
+ 8 TrackingEntities: false,                     29 ReplaceReadEntities: false,
+ 9 UseTempDB: false,                            30 EnableShadowProperties: false,
+10 UniqueTableNameTempDb: true,                 31 CustomSqlPostProcess: null,
+11 CustomDestinationTableName: null,            32 IncludeGraph: false,
+12 CustomSourceTableName: null,                 33 OmitClauseExistsExcept: false,
+13 CustomSourceDestinationMappingColumns: null, 34 DoNotUpdateIfTimeStampChanged: false,
+14 OnConflictUpdateWhereSql: null,              35 SRID: 4326,
+15 WithHoldlock: true,                          36 DateTime2PrecisionForceRound: false,
+16 CalculateStats: false,                       37 TemporalColumns: { "PeriodStart", "PeriodEnd" },
+17 SqlBulkCopyOptions: Default,                 38 OnSaveChangesSetFK: true,
+18 SqlBulkCopyColumnOrderHints: null,           39 IgnoreGlobalQueryFilters: false,
+19 DataReader: null,                            40 EnableStreaming: false,
+20 UseOptionLoopJoin:false,                     41 ApplySubqueryLimit: 0
+21 ConflictOption: None
 ----------------------------------------------------------------------------------------------
 METHOD: SetSynchronizeFilter<T>
         SetSynchronizeSoftDelete<T>
@@ -399,14 +403,15 @@ R { BulkRead ----------------|             |--Read -----|--Read -------|--Read  
 ```
 - Projects Composition:
 
-| Num | Nuget                                  | Reference | Transitive dep. | Note         | 
-| --- | -------------------------------------- | --------- | --------------- | ------------ | 
-| [0] | EFCore.BulkExtensions.Core             |           |                 | shared       |
-| [1] | EFCore.BulkExtensions.***SqlServer***  | [0]       |                 | per provider |
-| [2] | EFCore.BulkExtensions.***PostgreSql*** | [0]       |                 | per provider |
-| [3] | EFCore.BulkExtensions.***MySql***      | [0]       |                 | per provider |
-| [4] | EFCore.BulkExtensions.***Sqlite***     | [0]       |                 | per provider |
-| [5] | **EFCore.BulkExtensions** - main one   | [1,2,3,4] | [0]             | has all      |
+| Num | Nuget                                  | Reference   | Transitive dep. | Note         | 
+| --- | -------------------------------------- | ----------- | --------------- | ------------ | 
+| [0] | EFCore.BulkExtensions.Core             |             |                 | shared       |
+| [1] | EFCore.BulkExtensions.***SqlServer***  | [0]         |                 | per provider |
+| [2] | EFCore.BulkExtensions.***PostgreSql*** | [0]         |                 | per provider |
+| [3] | EFCore.BulkExtensions.***MySql***      | [0]         |                 | per provider |
+| [4] | EFCore.BulkExtensions.***Oracle***     | [0]         |                 | per provider |
+| [5] | EFCore.BulkExtensions.***Sqlite***     | [0]         |                 | per provider |
+| [6] | **EFCore.BulkExtensions** - main one   | [1,2,3,4,5] | [0]             | has all      |
 
 EFCore.BulkExtensions is main Project and Nuget that references all other nugets.  
 Other per provider projects have only Core dependency and specific adapter implementation with needed packages.
