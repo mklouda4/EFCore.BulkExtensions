@@ -187,6 +187,13 @@ public class OracleAdapter : ISqlOperationsAdapter
                 {
                     transaction.Commit();
                 }
+                if (context.Database.GetDbConnection().State != ConnectionState.Open)
+                {
+                    if (isAsync)
+                        await context.Database.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+                    else
+                        context.Database.OpenConnection();
+                }
             }
         }
         finally
@@ -218,6 +225,13 @@ public class OracleAdapter : ISqlOperationsAdapter
                     else
                     {
                         transaction.Dispose();
+                    }
+                    if (context.Database.GetDbConnection().State != ConnectionState.Open)
+                    {
+                        if (isAsync)
+                            await context.Database.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+                        else
+                            context.Database.OpenConnection();
                     }
                 }
             }
@@ -264,8 +278,8 @@ public class OracleAdapter : ISqlOperationsAdapter
         cmd.Transaction ??= context?.Database?.CurrentTransaction?.GetDbTransaction();
 
         if (isAsync)
-        {
-            await cmd.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+            {
+                await cmd.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
             //await context.Database.ExecuteSqlRawAsync(commandText, cancellationToken).ConfigureAwait(false);
         }
         else
