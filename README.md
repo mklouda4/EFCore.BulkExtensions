@@ -14,16 +14,16 @@ Icon>> and Logo (__):
 (f.forward | rocket time)
 
 **Also take a look into others packages:</br>
-Open source (MIT or cFOSS) authored [.Net libraries](https://infopedia.io/dot-net-libraries/) (@[**Infopedia.io**](https://infopedia.io/) personal blog post)
-| №  | .Net library             | Description                                              |
-| -  | ------------------------ | -------------------------------------------------------- |
-| 1* | [EFCore.BulkExtensions](https://github.com/borisdj/EFCore.BulkExtensions) | EF Core Bulk CRUD Ops (**Flagship** Lib) |
-| 2  | [EFCore.UtilExtensions](https://github.com/borisdj/EFCore.UtilExtensions) | EF Core Custom Annotations and AuditInfo |
-| 3  | [EFCore.FluentApiToAnnotation](https://github.com/borisdj/EFCore.FluentApiToAnnotation) | Converting FluentApi configuration to Annotations |
-| 4  | [ExcelIO.FastMapper](https://github.com/borisdj/ExcelIO.FastMapper) | Excel Input Output Mapper to-from Poco & .xlsx with attribute |
-| 5  | [FixedWidthParserWriter](https://github.com/borisdj/FixedWidthParserWriter) | Reading & Writing fixed-width/flat data files |
-| 6  | [CsCodeGenerator](https://github.com/borisdj/CsCodeGenerator) | C# code generation based on Classes and elements |
-| 7  | [CsCodeExample](https://github.com/borisdj/CsCodeExample) | Examples of C# code in form of a simple tutorial |
+Open source (MIT or cFOSS) authored [.Net libraries](https://infopedia.io/dot-net-libraries/) and other projects (@[**Infopedia.io**](https://infopedia.io/) personal blog post)
+| №  | Project                  | Type | Description                                              |
+| -  | ------------------------ | ---- | -------------------------------------------------------- |
+| 1* | [EFCore.BulkExtensions](https://github.com/borisdj/EFCore.BulkExtensions) | .Net Lib.(nuget) | EF Core Bulk CRUD Ops (**Flagship** Lib) |
+| 2  | [EFCore.UtilExtensions](https://github.com/borisdj/EFCore.UtilExtensions) | .Net Lib.(nuget) | EF Core Custom Annotations and AuditInfo |
+| 3  | [EFCore.FluentApiToAnnotation](https://github.com/borisdj/EFCore.FluentApiToAnnotation) | .Net Lib.(nuget) | Converting FluentApi configuration to Annotations |
+| 4  | [ExcelIO.FastMapper](https://github.com/borisdj/ExcelIO.FastMapper) | .Net Lib.(nuget) | Excel I/O Mapper to-from Poco & .xlsx with attribute |
+| 5  | [FixedWidthParserWriter](https://github.com/borisdj/FixedWidthParserWriter) | .Net Lib.(nuget) | Reading & Writing fixed-width/flat data files |
+| 6  | [CsCodeGenerator](https://github.com/borisdj/CsCodeGenerator) | .Net Lib.(nuget) | C# code generation based on Classes and elements |
+| 7  | [CsCodeExample](https://github.com/borisdj/CsCodeExample) | C# Code | Examples of C# code in form of a simple tutorial |
 
 ## License
 BulkExtensions [licensed](https://github.com/borisdj/EFCore.BulkExtensions/blob/master/LICENSE.txt) under [**Dual License v1**](https://codis.tech/efcorebulk) (**cFOSS**: conditionallyFree OSS - [OpenSource Sustainability](https://infopedia.io/solution-to-opensource-sustainability/) & funding).  
@@ -335,6 +335,7 @@ Return info will be in *BulkConfig.**TimeStampInfo*** object within field `Numbe
 **OnSaveChangesSetFK** is used only for BulkSaveChanges. When multiply entries have FK relationship which is Db generated, this set proper value after reading parent PK from Db. IF PK are generated in memory like are some Guid then this can be set to false for better efficiency.  
 **ReplaceReadEntities** when set to True result of BulkRead operation will be provided using replace instead of update. Entities list parameter of BulkRead method will be repopulated with obtained data. Enables functionality of Contains/IN which will return all entities matching the criteria (does not have to be by unique columns).  
 **UseOptionLoopJoin** when set it appends 'OPTION (LOOP JOIN)' for SqlServer, to reduce potential deadlocks on tables that have FKs. Use this [sql hint](https://learn.microsoft.com/en-us/sql/t-sql/queries/hints-transact-sql-query?view=sql-server-ver16) as a last resort for experienced devs and db admins.  
+**ConflictOption**: -*None*(as errors), -*Replace*(conflicting with new rows), -*Ignore*(keep old rows)
 **ApplySubqueryLimit** Default is zero '0'. When set to larger value it appends: LIMIT 'N', to generated query. Used only with PostgreSql.
 
 **DataReader** can be used when DataReader is also configured and when set it is propagated to SqlBulkCopy util object.  
